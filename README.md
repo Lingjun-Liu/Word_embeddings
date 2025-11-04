@@ -150,7 +150,14 @@
  > 5.essay with code <[Dimensionality Reduction for Machine Learning](https://www.scirp.org/journal/paperinformation?paperid=111638)>
  > 6.[scikit-learn官方文档：降维模块](https://scikit-learn.org/stable/modules/unsupervised_reduction.html)
 
-**本文详细介绍的降维技术：PCA、t-SNE、UMAP**
+### 三、本文详细介绍的降维技术：PCA、t-SNE、UMAP**
+
+| 方法        | 类型  | 保留结构    | 是否非线性 | 是否可泛化新样本 | 适合维度      | 适合任务       |
+| --------- | --- | ------- | ----- | -------- | --------- | ---------- |
+| **PCA**   | 线性  | 全局结构    | ❌ 否   | ✅ 是      | 高维 → 中维   | 特征压缩、预处理   |
+| **t-SNE** | 非线性 | 局部结构    | ✅ 是   | ❌ 否      | 高维 → 2/3D | 可视化        |
+| **UMAP**  | 非线性 | 局部 + 全局 | ✅ 是   | ✅ 是      | 高维 → 2/3D | 可视化、预处理、聚类 |
+
 
 
 ---
