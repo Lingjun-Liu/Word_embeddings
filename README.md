@@ -168,56 +168,11 @@
 ### 2.基本的研究工作流
 
 1. **数据准备**：定界语料（时间/地域/平台），清洗（去噪、标准化、去机器人/转推等）。
-2. **训练**：fastText（静态）或 BERT/roberta（上下文）获取词/句向量；记录完整超参。 ([aclanthology.org][3])
-3. **后处理**：ABTT 或 SIF；L2 规范化。 ([arxiv.org][8])
-4. **评估**：WordSim/SimLex/类比 + 你的下游任务（如回归/分类/网络/因果前处理）。 ([aclanthology.org][21])
-5. **降维与可视化**：PCA→t-SNE/UMAP；写清超参与局限解释。 ([jmlr.org][10])
-6. **对齐分析**（如时间/跨语）：正交 Procrustes 或自学习跨语映射。 ([arxiv.org][24])
-7. **偏见审计与治理**：WEAT/子空间检测 + 硬去偏（若用于应用）；论文中把偏见当作社会事实报告。 ([science.org][17])
+2. **训练**：fastText（静态）或 BERT/roberta（上下文）获取词/句向量；记录完整超参。 
+3. **后处理**：ABTT 或 SIF；L2 规范化。
+4. **评估**：WordSim/SimLex/类比 + 你的下游任务（如回归/分类/网络/因果前处理）。 
+5. **降维与可视化**：PCA→t-SNE/UMAP；写清超参与局限解释。 
+6. **对齐分析**（如时间/跨语）：正交 Procrustes 或自学习跨语映射。 
+7. **偏见审计与治理**：WEAT/子空间检测 + 硬去偏（若用于应用）；论文中把偏见当作社会事实报告。 
 8. **复现包**：发布词表、向量、训练脚本、评估脚本与可视化 notebook，确保可复跑。
 
----
-## 参考文献（精选，按主题）
-
-**基础与模型**：
-
-* Mikolov, T. et al. *Efficient Estimation of Word Representations in Vector Space*（word2vec）. ([arxiv.org][1])
-* Pennington, J. et al. *GloVe: Global Vectors for Word Representation*. ([aclanthology.org][2])
-* Levy, O. & Goldberg, Y. *Neural Word Embedding as Implicit Matrix Factorization*. （word2vec≈SPPMI 分解） ([proceedings.neurips.cc][19])
-* Bojanowski, P. et al. *Enriching Word Vectors with Subword Information*（fastText）。 ([aclanthology.org][3])
-* Peters, M. et al. *Deep Contextualized Word Representations*（ELMo）。 ([aclanthology.org][4])
-* Devlin, J. et al. *BERT*. ([arxiv.org][5])
-* Vaswani, A. et al. *Attention Is All You Need*（Transformer）。 ([papers.nips.cc][20])
-
-**评估基准**：
-
-* Finkelstein, L. et al. *WordSim-353*. ([gabrilovich.com][9])
-* Hill, F. et al. *SimLex-999*. ([aclanthology.org][21])
-* Mikolov, T. et al. *Linguistic Regularities…*（类比测试）。 ([aclanthology.org][22])
-
-**降维与可视化**：
-
-* van der Maaten, L. & Hinton, G. *t-SNE*. ([jmlr.org][10])
-* McInnes, L. et al. *UMAP*. ([arxiv.org][23])
-* Wattenberg, M. et al. *How to Use t-SNE Effectively*（实践注意）。 ([Distill][12])
-
-**对齐/时间/跨语**：
-
-* Hamilton, W. et al. *Diachronic Word Embeddings Reveal Statistical Laws of Semantic Change*. ([arxiv.org][13])
-* Smith, S. et al. *Offline Bilingual Word Vectors, Orthogonal Transformations…*（正交 Procrustes）。 ([arxiv.org][24])
-* Artetxe, M. et al. *A Robust Self-Learning Method for Fully Unsupervised Cross-Lingual Mappings*. ([aclanthology.org][14])
-* Grave, E. et al. *Unsupervised Alignment with Wasserstein Procrustes*. ([arxiv.org][15])
-
-**句子表示**：
-
-* Arora, S. et al. *A Simple but Tough-to-Beat Baseline for Sentence Embeddings*（SIF）。 ([openreview.net][25])
-* Reimers, N. & Gurevych, I. *Sentence-BERT*. ([arxiv.org][7])
-
-**偏见与治理**：
-
-* Caliskan, A. et al. *Semantics derived automatically… contain human-like biases*（WEAT，Science）。 ([science.org][17])
-* Bolukbasi, T. et al. *Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings*. ([papers.neurips.cc][18])
-
-**后处理**：
-
-* Mu, J. et al. *All-but-the-Top: Simple and Effective Postprocessing for Word Representations*. ([arxiv.org][8])
