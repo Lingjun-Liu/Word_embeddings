@@ -119,31 +119,34 @@
 - 句子向量（sentence embedding）：通常为512、768、1024（如BERT-base为768维），大模型甚至2048维、4096维等。
 - 维度选择权衡：维数高表达力强但训练、存储/计算资源消耗大，低维简单但信息表达能力有限。
 
+> embedding的多维度本质上是为了表达“多种潜在特征”。
+> 维度数量取决于模型设计、任务需求及实际场景，几百到几千维较常见。
 > 维度参数的介绍可以见embedding model的说明文档！！！！
 
+### 二、降维与可视化：
 
-**3. 维度与降维/可视化的关系**
-- 降维（如t-SNE、PCA、UMAP）就是为了将这高维空间（如768维的BERT向量）“压缩”到2维或3维，便于人类可视分析。
+**为什么降维**：
 
-**小结：**
-- embedding的多维度本质上是为了表达“多种潜在特征”。
-- 维度数量取决于模型设计、任务需求及实际场景，几百到几千维较常见。
+ - 降维（如t-SNE、PCA、UMAP）就是为了将这高维空间（如768维的BERT向量）“压缩”到2维或3维，便于可视化（2D/3D）与后续统计（如聚类/回归避免共线）。
 
+**机器学习中的降维技术**
 
-**为什么降维**：便于可视化（2D/3D）与后续统计（如聚类/回归避免共线）。
+ - 其实机器学习中有很多降维技术，而且也不只是在词嵌入分析中需要降维技术，这个部分主要介绍几种词嵌入分析中常用的降维技术，其他的降维技术及应用可以参考以下链接：
 
-* **PCA**：线性、全局结构好，速度快；适合先做“预降维到 50–100”，再接非线性方法。
-* **t-SNE**：保局部邻域的可视化神器；**不要**解读簇大小与簇间距离的全局意义；**调参很关键**（perplexity、学习率、迭代数），且不提供“对新样本的显式映射”。 ([jmlr.org][10])
-* **UMAP**：在保留全局/局部结构与速度上常优于 t-SNE，可用于可视化与通用非线性降维（支持任意目标维度，能学显式映射）。 ([arxiv.org][11])
+ > 1.[Introduction to Dimensionality Reduction](https://www.geeksforgeeks.org/machine-learning/dimensionality-reduction/)
+ > 2.[WiKi-Dimensionality reduction](https://en.wikipedia.org/wiki/Dimensionality_reduction)
+ > 3.essay [IBM: What is dimensionality reduction?](https://www.ibm.com/think/topics/dimensionality-reduction)
+ > 4.academic paper literiture review <[Review of Dimension Reduction Methods](https://www.scirp.org/journal/paperinformation?paperid=111638)>
+ > 5.essay with code <[Dimensionality Reduction for Machine Learning](https://www.scirp.org/journal/paperinformation?paperid=111638)>
+ > 6.[scikit-learn官方文档：降维模块](https://scikit-learn.org/stable/modules/unsupervised_reduction.html)
 
-**实操建议**：
-1）先 **PCA→50**，再 **t-SNE/UMAP→2**；
-2）t-SNE 的 perplexity 与样本量/密度相关，需网格搜索；
-3）可视化只作“探索性”与“交流性”证据，统计推断用原空间或经验证的低维表征。 ([Distill][12])
+**本文详细介绍的降维技术：PCA、t-SNE、UMAP**
+
 
 ---
+## 社会科学领域研究中的词向量分析
 
-## 6）如何对齐空间：跨时间（语义漂移）与跨语言
+## #如何对齐空间：跨时间（语义漂移）与跨语言
 
 **对齐动机**：不同时间/语种各自训练的空间坐标系不一致，直接比较无意义。
 **方法**：
@@ -184,12 +187,12 @@
 
 ---
 
-## 10）可复现性与稳健性清单（实践强烈建议）
+## 10）
 
 * **固定随机种子与版本**，记录：语料来源/清洗规则、分词/子词、窗口、维度、负采样、轮次、子采样阈值等；保存向量与词表映射。
 * **报告内在+外在评估**，并给出可视化仅作探索说明。
 * **后处理**（ABTT）与 **标准化**（L2）一并记录。 ([arxiv.org][8])
-* **降维参数**（t-SNE perplexity/学习率、UMAP n_neighbors/min_dist）随附敏感性分析。 ([Distill][12])
+* **降维参数**（t-SNE perplexity/学习率、UMAP n_neighbors/min_dist）随附敏感性分析。 
 
 ---
 
@@ -252,31 +255,3 @@
 8. **复现包**：发布词表、向量、训练脚本、评估脚本与可视化 notebook，确保可复跑。
 
 ---
-
-如果你愿意，我可以把上述内容打包成一份 **GitHub README 模板或教学讲义（含 t-SNE/UMAP 可视化示例、超参表、评测脚本）**，并按你的研究语料（中文社媒/新闻/学术等）给出默认配置与基准结果。
-
-[1]: https://arxiv.org/pdf/1301.3781?utm_source=chatgpt.com "Efficient Estimation of Word Representations in Vector Space"
-[2]: https://aclanthology.org/D14-1162/?utm_source=chatgpt.com "GloVe: Global Vectors for Word Representation"
-[3]: https://aclanthology.org/Q17-1010.pdf?utm_source=chatgpt.com "Enriching Word Vectors with Subword Information"
-[4]: https://aclanthology.org/N18-1202/?utm_source=chatgpt.com "Deep Contextualized Word Representations"
-[5]: https://arxiv.org/pdf/1810.04805?utm_source=chatgpt.com "arXiv:1810.04805v2 [cs.CL] 24 May 2019"
-[6]: https://openreview.net/forum?id=SyK00v5xx&utm_source=chatgpt.com "A Simple but Tough-to-Beat Baseline for Sentence ..."
-[7]: https://arxiv.org/pdf/1908.10084?utm_source=chatgpt.com "arXiv:1908.10084v1 [cs.CL] 27 Aug 2019"
-[8]: https://arxiv.org/abs/1702.01417?utm_source=chatgpt.com "All-but-the-Top: Simple and Effective Postprocessing for Word Representations"
-[9]: https://www.gabrilovich.com/resources/data/wordsim353/wordsim353.html?utm_source=chatgpt.com "The WordSimilarity-353 Test Collection - of Evgeniy Gabrilovich"
-[10]: https://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf?utm_source=chatgpt.com "Visualizing Data using t-SNE"
-[11]: https://arxiv.org/abs/1802.03426?utm_source=chatgpt.com "UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction"
-[12]: https://distill.pub/2016/misread-tsne?utm_source=chatgpt.com "How to Use t-SNE Effectively"
-[13]: https://arxiv.org/abs/1605.09096?utm_source=chatgpt.com "Diachronic Word Embeddings Reveal Statistical Laws of Semantic Change"
-[14]: https://aclanthology.org/P18-1073/?utm_source=chatgpt.com "A robust self-learning method for fully unsupervised cross ..."
-[15]: https://arxiv.org/abs/1805.11222?utm_source=chatgpt.com "Unsupervised Alignment of Embeddings with Wasserstein Procrustes"
-[16]: https://cs.stanford.edu/people/jure/pubs/diachronic-acl16.pdf?utm_source=chatgpt.com "Diachronic Word Embeddings Reveal Statistical Laws of ..."
-[17]: https://www.science.org/doi/10.1126/science.aal4230?utm_source=chatgpt.com "Semantics derived automatically from language corpora ..."
-[18]: https://papers.neurips.cc/paper/6228-man-is-to-computer-programmer-as-woman-is-to-homemaker-debiasing-word-embeddings.pdf?utm_source=chatgpt.com "Man is to Computer Programmer as Woman is ..."
-[19]: https://proceedings.neurips.cc/paper/5477-neural-word-embedding-as-implicit-matrix-factorization.pdf?utm_source=chatgpt.com "Neural Word Embedding as Implicit Matrix Factorization"
-[20]: https://papers.nips.cc/paper/7181-attention-is-all-you-need?utm_source=chatgpt.com "Attention is All you Need"
-[21]: https://aclanthology.org/J15-4004/?utm_source=chatgpt.com "SimLex-999: Evaluating Semantic Models With (Genuine) ..."
-[22]: https://aclanthology.org/N13-1090.pdf?utm_source=chatgpt.com "Linguistic Regularities in Continuous Space Word ..."
-[23]: https://arxiv.org/pdf/1802.03426?utm_source=chatgpt.com "UMAP: Uniform Manifold Approximation and Projection for ..."
-[24]: https://arxiv.org/pdf/1702.03859?utm_source=chatgpt.com "offline bilingual word vectors, orthogonal"
-[25]: https://openreview.net/pdf?id=SyK00v5xx&utm_source=chatgpt.com "A SIMPLE BUT TOUGH-TO-BEAT BASELINE FOR SEN"
