@@ -5,73 +5,130 @@
 其实embedding models不仅仅是指word-embedding模型，Embedding models（嵌入模型）是一类用来将数据，例如文本、图片或其他类型的离散信息，映射到一个连续、低维度的向量空间的机器学习模型。在这个向量空间中，相似的数据距离更近，不相似的数据距离更远。我们这里主要是说word-embedding模型
 
 ## 我学习过的一些在线课程：
+
 1.UCL的课程[《Representing Text as Data (II): Word Embeddings》](https://uclspp.github.io/PUBL0099/seminars/seminar7.html)
+
 2.NanJing University[《计算传播学》](https://chengjun.github.io/mybook/10-word2vec.html)
-3.[<Word Embeddings in Python>](https://medium.com/biased-algorithms/word-embeddings-in-python-a8085488d244)
+
+3.Word Embeddings in Python的一篇科普文章[Word Embeddings in Python](https://medium.com/biased-algorithms/word-embeddings-in-python-a8085488d244)
+
 4.UBC Vancouver School of Economics[<4.4 - Advanced - Word Embeddings>](https://comet.arts.ubc.ca/docs/4_Advanced/advanced_word_embeddings/advanced_word_embeddings_python_version.html)
-5.[<Natural Language Processing with Python>](https://www.nltk.org/book/)
+
+5.[Natural Language Processing with Python](https://www.nltk.org/book/)
+
 6.一个好玩的东西[embedding-explorer](https://centre-for-humanities-computing.github.io/embedding-explorer/)
 
 
-## 1）为什么要用词向量：把语言嵌入量化坐标系
-
+## 为什么要用词向量：把语言嵌入量化坐标系
 
 词向量（word embeddings）把“词”映射到实数向量，使“语义相似→几何相近、关系→向量运算”成为可能。它让文本材料进入回归、因果、网络、时序等量化分析，是将语言变为“可测量社会事实”的核心步骤。
 早期静态嵌入（每个词一个向量）由 **word2vec** 与 **GloVe** 奠基；随后 ELMo/BERT 等**上下文嵌入**让同一词在不同语境中拥有不同表示；Transformer 体系（“Attention Is All You Need”）成为当代嵌入与大模型的主干。[Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781)
 
 ---
 
-## 2）模型谱系与要点
+## 模型谱系与要点
 
-### 2.1 静态嵌入（每个词一个向量）
+### 一、word embedding models的发展与谱系 ###
 
-* **word2vec（CBOW/Skip-gram + 负采样）**：通过上下文预测目标词或反向，学习向量；经典的“king − man + woman ≈ queen”来自该系。理论上它等价于对 **Shifted-PMI** 共现矩阵的隐式加权分解（理解其何以有效的关键）。 
-* **GloVe**：显式用全局共现统计构造损失，本质是矩阵分解视角。 ([aclanthology.org][2])
-* **fastText（子词/字符 n-gram）**：解决 OOV 与形态丰富语言的小样本表示。 ([aclanthology.org][3])
+ 1.早期方法（基于统计和矩阵分解）
 
-### 2.2 上下文嵌入与大模型
+  - LSA（Latent Semantic Analysis）：通过对词-文档共现矩阵做奇异值分解（SVD）提取低维稠密表达。
 
-* **ELMo**：双向语言模型内部态的函数，显著提升多项 NLP 任务。 ([aclanthology.org][4])
-* **BERT/Transformer**：双向自注意力预训练，成为通用表示主流。 ([arxiv.org][5])
+  - HAL、COALS、PPMI等：依赖各类词共现统计的方法。
 
-### 2.3 句子/段落嵌入
+ 2.神经网络word embedding的黄金时代
 
-* **平均/加权平均**：简单有效，但忽视词序；可用 **SIF**（去均值+频率加权）改善。 ([openreview.net][6])
-* **Sentence-BERT（SBERT）**：Siamese/Triplet 结构，将句子编码为可直接余弦检索的向量。 ([arxiv.org][7])
+  - Word2Vec（CBOW/Skip-gram，2013）：采用浅层神经网络，极大提升了embedding表达的语义能力与效率，成为分布式语义的核心工具。
+
+  - GloVe（2014）：结合全局词频统计与局部上下文窗口，让向量既有统计优势也有神经表示能力。
+
+ - FastText（2016）：在Word2Vec基础上引入子词信息，不仅适配无OOV词，还能更好地捕捉词内结构。
+
+3.Contextual Word Embedding（上下文相关词向量）
+
+ - ELMo（2018）：用双向LSTM处理文本获得动态词表示。
+
+ - BERT（2018）：基于Transformer结构，不同输入上下文可生成不同的词向量，极大提升了文本理解能力。
+
+ - GPT、XLNet、RoBERTa等：Transformer家族的其他优秀变体。
+
+### 二、通用Embedding/语句Embedding模型的发展（2018至今）###
+
+ 1.Sentence Embedding阶段
+
+ - Universal Sentence Encoder、InferSent：尝试获得句子的固定向量表示。
+
+ - SBERT/SentenceTransformer：引入Siamese结构优化BERT、RoBERTa用于语句/段落嵌入。
+
+ - SimCSE：利用对比学习进一步提升embedding质量。
+
+ 2.专用Embedding（跨模态、领域）
+
+ - 针对代码（CodeBERT）、法律、医疗等专业领域做定制化训练。
+
+ - 跨模态领域如CLIP（文本-图像）、MMTEB等。
+
+ - 多语言/大规模Embedding模型
+ > 这个领域是我目前在开展研究的一个部分，中国有很多不错的多语言嵌入模型比如Qwen-4B、Qwen-8B占据huggingface的benchmark前几名
+
+ - LaBSE、XLM-R等支持多语言语句嵌入。
+
 
 ---
 
-## 3）如何训练：语料、超参与稳定性
-
-**语料**：规模越大、领域越贴近，词向量越可信。
-**窗口大小**：小窗口偏句法，大窗口偏语义。
-**负采样 k**、**子采样阈值**（丢弃高频词）、**维度 d**、**迭代数**：共同影响邻近性结构与收敛。
-word2vec 原论文与“隐式矩阵分解”工作是理解这些超参如何改变几何结构的最佳入口。 ([arxiv.org][1])
-
-**后处理**：
-
-* **All-but-the-top**（去均值+去前几主导方向）可稳定提升下游效果；对上下文嵌入也有研究延伸。 ([arxiv.org][8])
-
----
-
-## 4）如何评估：内在 vs 外在
+## 如何评估一个嵌入模型的质量
 
 衡量 embedding models 质量的指标主要包括以下几种：
 
  1.语义相似性:检查相似概念或词语在嵌入空间中距离是否较近。用 cosine similarity、欧氏距离等进行定量评估。
+
  2.下游任务表现:将嵌入作为分类、聚类、推荐等任务的特征输入，看任务的准确率、查准率、查全率等是否提升。
+
  3.邻近检索/最近邻查询（Nearest Neighbor Search）: 测试 embedding 对检索任务有多大帮助，例如相似文档、相似图片的召回率。
+
  4.可视化分析: 利用 PCA 或 t-SNE 等方法降维，可视化聚类效果和分布，观测语义结构是否符合预期。
- 5.外部基准数据集评测: 用公开评测集（如Textual Similarity，Image Retrieval等）对模型结果评分，如 Spearman/Pearson correlation、MRR、NDCG 等指标。
- > 比如hugging face上常用的“[Massive Text Embedding Benchmark (MTEB)]()"
+
+ 5.外部基准数据集评测: 用公开评测集（如Textual Similarity，Image Retrieval等）对模型结果评分，如 Spearman/Pearson correlation、MRR、NDCG 等指标。  
+ > 比如hugging face上常用的“[Massive Text Embedding Benchmark (MTEB)](https://huggingface.co/mteb)"，还有排行版[Embedding Leaderboard](https://huggingface.co/spaces/mteb/leaderboard)
  > 参考资料：“[What are benchmark datasets in machine learning, and where can I find them?](https://milvus.io/ai-quick-reference/what-are-benchmark-datasets-in-machine-learning-and-where-can-i-find-them)”
+
  6.偏差与公平性测试:检查 embedding 是否有不公平的偏见牵连，如性别、种族偏见。
+
  > ⚠️但是注意有时候这个就是我们社会科学研究想要研究和分析的部分
 
 
 ---
 
-## 5）如何降维与可视化：PCA / t-SNE / UMAP（你问到的重点）
+## 词向量的维度以及其降维方法与可视化
+
+### 一、什么是词向量维度：
+在embedding任务中，“维度”指的是每个向量的分量数量。常见的理解和解答如下：
+
+**1. 为什么embedding会是多维度？**
+
+- 维度（dimension）是数学和编程中的术语。例如：
+  - 100维embedding向量：每个词或句子被表示为具有100个实数分量的向量 $$(x_1, x_2, ..., x_{100})$$。
+  - 也可以理解为有100个特征描述一个对象。
+
+- 高维embedding能捕捉更丰富、复杂的语义信息。例如一个单词的特征——词性、含义、情感色彩、上下文用法等，都可以由不同维度协同编码。
+
+- 神经网络（如Word2Vec、BERT等）训练embedding时，通常会将每个词/句子/文档映射成一个**高维向量**，以便模型更好地区分不同语义和结构。
+
+**2. embedding常见的“多少维”？**
+- 词向量（word embedding）：常见为50、100、200、300（如GloVe/Word2Vec），有的自定义为512或更高。
+- 句子向量（sentence embedding）：通常为512、768、1024（如BERT-base为768维），大模型甚至2048维、4096维等。
+- 维度选择权衡：维数高表达力强但训练、存储/计算资源消耗大，低维简单但信息表达能力有限。
+
+> 维度参数的介绍可以见embedding model的说明文档！！！！
+
+
+**3. 维度与降维/可视化的关系**
+- 降维（如t-SNE、PCA、UMAP）就是为了将这高维空间（如768维的BERT向量）“压缩”到2维或3维，便于人类可视分析。
+
+**小结：**
+- embedding的多维度本质上是为了表达“多种潜在特征”。
+- 维度数量取决于模型设计、任务需求及实际场景，几百到几千维较常见。
+
 
 **为什么降维**：便于可视化（2D/3D）与后续统计（如聚类/回归避免共线）。
 
